@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>IMBA Кликер — FullScreen & Удобный</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #f0f5f9;
+      overflow: hidden;
+    }
+    body {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .top-label {
+      position: absolute;
+      top: 16px;
+      left: 24px;
+      z-index: 10;
+      font-size: 1.3rem;
+      color: #32a852;
+      background: rgba(255,255,255,0.9);
+      padding: 8px 18px;
+      border-radius: 18px;
+      font-weight: bold;
+      box-shadow: 0 2px 8px #32a85233;
+      letter-spacing: 0.5px;
+      user-select: none;
+      pointer-events: none;
+    }
+    .container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: manipulation;
+      border-radius: 32px;
+      background: #fff;
+      box-shadow: 0 8px 48px rgba(50,168,82,0.08), 0 0 0 12px #32a85222;
+      padding: 0;
+      transition: box-shadow 0.2s;
+      position: relative;
+    }
+    h1 {
+      margin: 0 0 24px 0;
+      font-size: 2.3rem;
+      color: #32a852;
+      user-select: none;
+      letter-spacing: 2px;
+      text-shadow: 0 1px 8px #7fffd4;
+    }
+    #clicker {
+      font-size: 2rem;
+      padding: 42px 110px;
+      margin: 34px 0 18px 0;
+      border: none;
+      background: linear-gradient(90deg, #32a852 60%, #7fffd4 100%);
+      color: #fff;
+      border-radius: 36px;
+      cursor: pointer;
+      box-shadow: 0 4px 32px rgba(50,168,82,0.2), 0 0 10px #7fffd4;
+      font-weight: bold;
+      transition: background 0.2s, transform 0.08s;
+      user-select: none;
+      outline: none;
+      touch-action: manipulation;
+      border: 2px solid #32a852;
+    }
+    #clicker:active {
+      background: linear-gradient(90deg, #25913c 60%, #32a852 100%);
+      transform: scale(0.97);
+    }
+    #count {
+      font-weight: bold;
+      font-size: 2.1rem;
+      color: #32a852;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+    .progress-bar-bg {
+      width: 80vw;
+      max-width: 500px;
+      height: 38px;
+      background: #e0e9e6;
+      border-radius: 20px;
+      margin: 18px 0 8px 0;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(50,168,82,0.12);
+      display: flex;
+      align-items: center;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #32a852 60%, #7fffd4 100%);
+      width: 0%;
+      border-radius: 20px;
+      transition: width 0.3s;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    .progress-label {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      text-align: center;
+      color: #145c2a;
+      font-weight: bold;
+      font-size: 1.1rem;
+      user-select: none;
+      letter-spacing: 1px;
+    }
+    #level {
+      font-size: 1.3rem;
+      margin-top: 8px;
+      color: #25913c;
+      font-weight: bold;
+      user-select: none;
+    }
+    #multiplier {
+      font-size: 1.1rem;
+      margin-top: 4px;
+      color: #145c2a;
+      font-weight: bold;
+      user-select: none;
+    }
+    #clickinfo {
+      margin-bottom: 8px;
+      color: #25913c;
+      font-size: 1.2rem;
+      user-select: none;
+    }
+    @media (max-width: 600px) {
+      .top-label { font-size: 1rem; padding: 6px 12px; left: 10px; top: 10px; }
+      h1 { font-size: 1.5rem; }
+      #clicker { font-size: 1.1rem; padding: 17vw 8vw; border-radius: 18px; }
+      .progress-bar-bg { height: 19px; border-radius: 8px; }
+      .progress-label { font-size: 0.95rem; }
+      #count { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-label">Главный пупс МИРА @ДАНЯ</div>
+  <div class="container" id="container">
+    <h1>IMBA Кликер</h1>
+    <div id="clickinfo">Каждый клик: <span id="clickval">x1</span></div>
+    <button id="clicker">Кликни меня!</button>
+    <p id="count">0</p>
+    <div class="progress-bar-bg">
+      <div class="progress-bar" id="progress"></div>
+      <div class="progress-label">
+        <span id="exp_in_level">0</span> / <span id="exp_to_next">100</span> (осталось: <span id="exp_left">100</span>)
+      </div>
+    </div>
+    <div id="level">Уровень: 1</div>
+    <div id="multiplier">Множитель: x1</div>
+    <!-- Звук WOOHOO -->
+    <audio id="woohoo">
+      <source src="https://cdn.jsdelivr.net/gh/stevenvachon/wav-samples@master/celebration/woohoo.wav" type="audio/wav">
+    </audio>
+  </div>
+  <script>
+    let count = 0;        // Всего опыта
+    let level = 1;        // Текущий уровень
+    let multiplier = 1;   // Множитель клика
+    let lastWoohooCount = 0;
+    let clickBuffer = 0;
+    let bufferTimer = null;
+    const bufferDuration = 25; // мс — задержка для буфера кликов
+
+    // DOM
+    const clicker = document.getElementById('clicker');
+    const countSpan = document.getElementById('count');
+    const woohoo = document.getElementById('woohoo');
+    const progress = document.getElementById('progress');
+    const levelDiv = document.getElementById('level');
+    const multDiv = document.getElementById('multiplier');
+    const clickValSpan = document.getElementById('clickval');
+    const expInLevelSpan = document.getElementById('exp_in_level');
+    const expToNextSpan = document.getElementById('exp_to_next');
+    const expLeftSpan = document.getElementById('exp_left');
+    const container = document.getElementById('container');
+
+    function expForLevel(lvl) {
+      return lvl * 100;
+    }
+    function totalExpToReachLevel(lvl) {
+      let sum = 0;
+      for (let i = 1; i < lvl; i++) sum += expForLevel(i);
+      return sum;
+    }
+    function updateProgress() {
+      const expPrev = totalExpToReachLevel(level);
+      const expToNext = expForLevel(level);
+      const expInLevel = count - expPrev;
+      const expLeft = expToNext - expInLevel;
+      let percent = Math.max(0, Math.min(100, Math.floor(100 * expInLevel / expToNext)));
+      progress.style.width = percent + '%';
+      countSpan.textContent = count;
+      levelDiv.textContent = `Уровень: ${level}`;
+      clickValSpan.textContent = `x${multiplier}`;
+      multDiv.textContent = `Множитель: x${multiplier}`;
+      expInLevelSpan.textContent = expInLevel;
+      expToNextSpan.textContent = expToNext;
+      expLeftSpan.textContent = expLeft > 0 ? expLeft : 0;
+    }
+    function addClicks(clicks) {
+      count += clicks;
+      while (count >= totalExpToReachLevel(level + 1)) {
+        level++;
+        multiplier = level;
+      }
+      updateProgress();
+      if (Math.floor(count / 100) > Math.floor(lastWoohooCount / 100)) {
+        woohoo.currentTime = 0;
+        woohoo.play();
+      }
+      lastWoohooCount = count;
+    }
+    // Быстрые клики — буферизация
+    function bufferedClick() {
+      clickBuffer += multiplier;
+      if (!bufferTimer) {
+        bufferTimer = setTimeout(() => {
+          addClicks(clickBuffer);
+          clickBuffer = 0;
+          bufferTimer = null;
+        }, bufferDuration);
+      }
+    }
+    clicker.addEventListener('click', e => {
+      e.preventDefault();
+      bufferedClick();
+    });
+    clicker.addEventListener('touchstart', e => {
+      e.preventDefault();
+      bufferedClick();
+    });
+    // Отключаем дабл-тап зум на мобильных
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function (event) {
+      let now = Date.now();
+      if (now - lastTouchEnd <= 350) event.preventDefault();
+      lastTouchEnd = now;
+    }, false);
+    container.addEventListener('dblclick', function(e) { e.preventDefault(); });
+    // Hotkey: Space/Enter — кликер
+    document.addEventListener('keydown', e => {
+      if (e.code === 'Space' || e.code === 'Enter') {
+        e.preventDefault();
+        bufferedClick();
+      }
+    });
+
+    updateProgress();
+  </script>
+</body>
+</html>
